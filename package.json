@@ -1,0 +1,19 @@
+{
+  "name": "launchkey-companion",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:phoomparin/launchkey-web.git",
+  "author": "Phoomparin Mano <phoomparin@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "start": "parcel src/index.pug --https",
+    "start": "parcel build src/index.pug"
+  },
+  "dependencies": {
+    "vue": "^2.6.11",
+    "webmidi": "^2.5.1"
+  },
+  "devDependencies": {
+    "parcel-bundler": "^1.12.4"
+  }
+}
