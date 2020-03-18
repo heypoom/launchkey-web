@@ -10,10 +10,13 @@
     "build": "parcel build src/index.pug"
   },
   "dependencies": {
+    "bluebird": "^3.7.2",
     "vue": "^2.6.11",
     "webmidi": "^2.5.1"
   },
   "devDependencies": {
-    "parcel-bundler": "^1.12.4"
+    "parcel-bundler": "^1.12.4",
+    "pug": "^2.0.4",
+    "typescript": "^3.8.3"
   }
 }
