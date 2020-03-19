@@ -3,6 +3,8 @@ import {LaunchKey} from './LaunchKey'
 import {LIGHT_BLUE, PINK, TEAL, WHITE, RED, GREEN, LIGHT_TEAL} from './colors'
 import {positionOf} from './utils'
 
+import {oofAudio, squeakAudio} from './audio'
+
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
 
 export class WhackAMole extends LaunchKey {
@@ -68,8 +70,7 @@ export class WhackAMole extends LaunchKey {
     // Missed the mole.
     if (this.decayState[position] === 1) {
       this.resetBlock(position, RED)
-
-      this.updateScore(-1)
+      this.fail()
 
       console.log(
         `Whoops! You missed the mole at ${position}. Score = ${this.score}`,
@@ -102,11 +103,16 @@ export class WhackAMole extends LaunchKey {
     this.clearLights()
   }
 
+  fail() {
+    this.updateScore(-1)
+    oofAudio.play()
+  }
+
   hit(note: number) {
     const position = positionOf(note)
 
     if (!this.state[position]) {
-      this.updateScore(-1)
+      this.fail()
       this.resetBlock(position, RED)
 
       console.log(
@@ -120,6 +126,8 @@ export class WhackAMole extends LaunchKey {
 
     this.updateScore(1)
     this.resetBlock(position, LIGHT_TEAL)
+
+    squeakAudio.play()
   }
 
   updateScore(addBy = 1) {
