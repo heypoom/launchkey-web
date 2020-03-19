@@ -2,13 +2,24 @@ import {LaunchKey} from './LaunchKey'
 
 import {LIGHT_BLUE, PINK, TEAL, BRIGHT_WHITE} from './colors'
 
-export class DrawingBoard {
-  board: LaunchKey
+export class DrawingBoard extends LaunchKey {
   data: {[key: string]: number} = {}
   colors = [PINK, TEAL, LIGHT_BLUE, BRIGHT_WHITE]
 
+  constructor() {
+    super()
+
+    this.on('controlChange', (id, value) => {
+      if (id === 59 && value === 127) this.reset()
+    })
+
+    this.on('padTouch', note => this.update(note))
+
+    this.reset()
+  }
+
   reset() {
-    this.board.clearLights()
+    this.clearLights()
     this.data = {}
   }
 
@@ -19,19 +30,6 @@ export class DrawingBoard {
 
     let nextColor = this.colors[color]
 
-    this.board.send(note, nextColor)
-  }
-
-  async setup() {
-    this.board = new LaunchKey()
-    await this.board.setup()
-
-    this.board.on('controlChange', (id, value) => {
-      if (id === 59 && value === 127) this.reset()
-    })
-
-    this.board.on('padTouch', note => this.update(note))
-
-    this.reset()
+    this.send(note, nextColor)
   }
 }

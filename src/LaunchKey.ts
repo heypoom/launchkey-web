@@ -12,18 +12,17 @@ export const enableMidi = () =>
 
 type KeyHandler = (note: number, velocity: number) => void
 
-type KeyListeners = {
-  controlChange: KeyHandler[]
+type KeyEvents =
+  | 'controlChange'
+  | 'padTouch'
+  | 'padRelease'
+  | 'noteActive'
+  | 'noteRelease'
+  | 'update'
+  | 'clear'
+  | 'ready'
 
-  padTouch: KeyHandler[]
-  padRelease: KeyHandler[]
-
-  noteActive: KeyHandler[]
-  noteRelease: KeyHandler[]
-
-  update: KeyHandler[]
-  clear: KeyHandler[]
-}
+type KeyListeners = Record<KeyEvents, KeyHandler[]>
 
 export class LaunchKey {
   midiIn: Input
@@ -43,6 +42,11 @@ export class LaunchKey {
     noteRelease: [],
     update: [],
     clear: [],
+    ready: [],
+  }
+
+  constructor() {
+    this.setup()
   }
 
   on(event: keyof KeyListeners, handler: KeyHandler) {
@@ -51,7 +55,7 @@ export class LaunchKey {
     this.listeners[event].push(handler)
   }
 
-  dispatch(event: keyof KeyListeners, note: number, velocity: number) {
+  dispatch(event: keyof KeyListeners, note: number = 0, velocity: number = 0) {
     if (!this.listeners[event]) return
 
     console.debug(`event ${event}>`, note, velocity)
@@ -68,6 +72,7 @@ export class LaunchKey {
     this.initPorts()
     this.enableExtendedMode()
     this.setupListeners()
+    this.dispatch('ready')
 
     this.initialized = true
   }
@@ -143,6 +148,6 @@ export class LaunchKey {
       this.send(note, BRIGHT_WHITE)
     }
 
-    this.dispatch('clear', 0, 0)
+    this.dispatch('clear')
   }
 }

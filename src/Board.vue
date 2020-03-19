@@ -71,15 +71,14 @@ export default Vue.extend({
   },
 
   async mounted() {
-    const app = new DrawingBoard()
-    await app.setup()
-    this.app = app
+    const board = new DrawingBoard()
+    this.board = board
 
-    app.board.on('clear', () => {
+    board.on('clear', () => {
       this.colors = Array(18).fill('white')
     })
 
-    app.board.on('update', (note, color) => {
+    board.on('update', (note, color) => {
       let position = note - 95
       if (position >= 17) position -= 7
 
