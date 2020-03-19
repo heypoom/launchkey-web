@@ -51,7 +51,7 @@ $gap-size: 20px;
 <script lang="ts">
 import Vue from 'vue'
 
-import {WhackAMole} from './WhackAMole'
+import {DrawingBoard} from './DrawingBoard'
 import {colorMapping} from './colors'
 
 import {positionOf, noteOf} from './utils'
@@ -65,14 +65,13 @@ export default Vue.extend({
 
   methods: {
     tap(position) {
-      this.board.hit(noteOf(position))
+      this.board.update(noteOf(position))
     },
   },
 
   async mounted() {
-    const board = new WhackAMole()
+    const board = new DrawingBoard()
     this.board = board
-    window.board = board
 
     board.on('clear', () => {
       this.colors = INITIAL_BOARD

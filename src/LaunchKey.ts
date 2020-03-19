@@ -1,6 +1,7 @@
 import WebMidi, {Input, Output, INoteParam} from 'webmidi'
 
 import {BRIGHT_WHITE} from './colors'
+import {noteOf} from './utils'
 
 export const enableMidi = () =>
   new Promise((resolve, reject) => {
@@ -131,7 +132,7 @@ export class LaunchKey {
     if (!this.ctrlOut) return
     if (velocity < 0 || velocity > 127) return
 
-    if (note >= 95) this.dispatch('update', note, velocity)
+    if (note > 95) this.dispatch('update', note, velocity)
 
     this.ctrlOut.playNote(note, 16, {
       velocity,
@@ -139,8 +140,10 @@ export class LaunchKey {
     })
   }
 
-  light(pos: number, color: number) {
-    this.send(pos + 95, color)
+  light(position: number, color: number) {
+    let note = noteOf(position)
+
+    this.send(note, color)
   }
 
   clearLights() {

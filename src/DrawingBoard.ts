@@ -15,7 +15,7 @@ export class DrawingBoard extends LaunchKey {
 
     this.on('padTouch', note => this.update(note))
 
-    this.reset()
+    this.on('ready', () => this.reset())
   }
 
   reset() {
