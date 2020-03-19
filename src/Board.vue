@@ -1,6 +1,8 @@
 <template lang="pug">
   main
     .container
+      h1.score
+        div Score: {{score}}
       .pads-container
         .pad(v-for="i in 18", :style="{background: colors[i]}", @click="tap(i)") {{i}}
 </template>
@@ -11,10 +13,16 @@ $gap-size: 20px;
 
 .container {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   min-height: 100vh;
   background: #2d2d30;
+}
+
+.score {
+  color: white;
+  font-size: 3em;
 }
 
 .pads-container {
@@ -61,6 +69,7 @@ let INITIAL_BOARD = Array(18).fill('white')
 export default Vue.extend({
   data: () => ({
     colors: INITIAL_BOARD,
+    score: 0,
   }),
 
   methods: {
@@ -73,6 +82,10 @@ export default Vue.extend({
     const board = new WhackAMole()
     this.board = board
     window.board = board
+
+    board.onScoreUpdate = score => {
+      this.score = score
+    }
 
     board.on('clear', () => {
       this.colors = INITIAL_BOARD

@@ -12,7 +12,7 @@ export class WhackAMole extends LaunchKey {
   decayState = Array(17).fill(0)
 
   config = {
-    decayTime: () => Math.floor(Math.random() * 30) + 10,
+    decayTime: () => Math.floor(Math.random() * 40) + 10,
     moleChance: 0.01,
     gameTick: 200,
   }
@@ -82,6 +82,7 @@ export class WhackAMole extends LaunchKey {
   async startGame() {
     this.clearLights()
     this.isPlaying = true
+    this.onScoreUpdate(0)
 
     console.log('Go!')
 
