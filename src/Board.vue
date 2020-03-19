@@ -3,6 +3,8 @@
     .container
       h1.score
         div Score: {{score}}
+      div
+        button.play(v-if="!isPlaying", @click="play") Play
       .pads-container
         .pad(v-for="i in 18", :style="{background: colors[i]}", @click="tap(i)") {{i}}
 </template>
@@ -18,6 +20,22 @@ $gap-size: 20px;
   justify-content: center;
   min-height: 100vh;
   background: #2d2d30;
+}
+
+button.play {
+  cursor: pointer;
+  margin-bottom: 2em;
+  padding: 0.5em 2em;
+  font-size: 1.8em;
+  background: transparent;
+  color: #01dcfc;
+  font-weight: 600;
+  border: 3px solid #01dcfc;
+
+  &:hover {
+    color: white;
+    border: 3px solid white;
+  }
 }
 
 .score {
@@ -70,11 +88,16 @@ export default Vue.extend({
   data: () => ({
     colors: INITIAL_BOARD,
     score: 0,
+    isPlaying: false,
   }),
 
   methods: {
     tap(position) {
       this.board.hit(noteOf(position))
+    },
+
+    play() {
+      this.board.startGame()
     },
   },
 
@@ -85,6 +108,10 @@ export default Vue.extend({
 
     board.onScoreUpdate = score => {
       this.score = score
+    }
+
+    board.onStatusUpdate = isPlaying => {
+      this.isPlaying = isPlaying
     }
 
     board.on('clear', () => {

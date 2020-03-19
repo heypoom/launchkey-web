@@ -14,15 +14,16 @@ export class WhackAMole extends LaunchKey {
   decayState = Array(17).fill(0)
 
   config = {
-    decayTime: () => Math.floor(Math.random() * 40) + 10,
-    moleChance: 0.01,
+    decayTime: () => Math.floor(Math.random() * 10) + 10,
+    moleChance: 0.05,
     gameTick: 200,
   }
 
-  isPlaying = true
+  isPlaying = false
   score = 0
 
   onScoreUpdate = (score: number) => {}
+  onStatusUpdate = (isPlaying: boolean) => {}
 
   constructor() {
     super()
@@ -35,7 +36,7 @@ export class WhackAMole extends LaunchKey {
 
     this.on('padTouch', note => this.hit(note))
 
-    this.on('ready', () => this.startGame())
+    this.on('ready', () => this.clearLights())
   }
 
   addMole(position: number) {
@@ -82,7 +83,7 @@ export class WhackAMole extends LaunchKey {
 
   async startGame() {
     this.clearLights()
-    this.isPlaying = true
+    this.setPlaying(true)
     this.onScoreUpdate(0)
 
     console.log('Go!')
@@ -98,8 +99,13 @@ export class WhackAMole extends LaunchKey {
     }
   }
 
+  setPlaying(isPlaying: boolean) {
+    this.isPlaying = isPlaying
+    this.onStatusUpdate(isPlaying)
+  }
+
   endGame() {
-    this.isPlaying = false
+    this.setPlaying(false)
     this.clearLights()
   }
 
