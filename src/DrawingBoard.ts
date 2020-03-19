@@ -7,13 +7,9 @@ export class DrawingBoard {
   data: {[key: string]: number} = {}
   colors = [PINK, TEAL, LIGHT_BLUE, BRIGHT_WHITE]
 
-  onUpdate = (note: number, color: number) => {}
-  onClear = () => {}
-
   reset() {
     this.board.clearLights()
     this.data = {}
-    this.onClear()
   }
 
   update(note: number) {
@@ -22,8 +18,6 @@ export class DrawingBoard {
     this.data[note] = color
 
     let nextColor = this.colors[color]
-
-    this.onUpdate(note, nextColor)
 
     this.board.send(note, nextColor)
   }

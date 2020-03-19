@@ -6,6 +6,9 @@
 </template>
 
 <style lang="scss">
+$button-size: 150px;
+$gap-size: 20px;
+
 .container {
   display: flex;
   align-items: center;
@@ -16,9 +19,9 @@
 
 .pads-container {
   display: grid;
-  grid-template-rows: repeat(2, 100px);
-  grid-template-columns: repeat(9, 100px);
-  grid-gap: 15px 15px;
+  grid-template-rows: repeat(2, $button-size);
+  grid-template-columns: repeat(9, $button-size);
+  grid-gap: $gap-size $gap-size;
 }
 
 .pad {
@@ -27,11 +30,21 @@
   justify-content: center;
   background: white;
   color: #2d2d30;
-  font-weight: 500;
-  font-size: 2.5em;
+  font-weight: 600;
+  font-size: 3em;
   cursor: pointer;
 
-  box-shadow: 4px 4px 4px rgba(255, 255, 255, 0.3);
+  box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.3);
+  border-radius: 8px;
+}
+
+.pad:nth-child(9),
+.pad:nth-child(18) {
+  width: 90px;
+  height: 90px;
+  border-radius: 10em;
+  margin: 25px;
+  font-size: 2.3em;
 }
 </style>
 
@@ -62,18 +75,18 @@ export default Vue.extend({
     await app.setup()
     this.app = app
 
-    app.onClear = () => {
+    app.board.on('clear', () => {
       this.colors = Array(18).fill('white')
-    }
+    })
 
-    app.onUpdate = (note, color) => {
+    app.board.on('update', (note, color) => {
       let position = note - 95
       if (position >= 17) position -= 7
 
       Vue.set(this.colors, position, colorMapping[color])
 
       console.log([...this.colors])
-    }
+    })
   },
 })
 </script>

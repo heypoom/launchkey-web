@@ -20,6 +20,9 @@ type KeyListeners = {
 
   noteActive: KeyHandler[]
   noteRelease: KeyHandler[]
+
+  update: KeyHandler[]
+  clear: KeyHandler[]
 }
 
 export class LaunchKey {
@@ -38,6 +41,8 @@ export class LaunchKey {
     padRelease: [],
     noteActive: [],
     noteRelease: [],
+    update: [],
+    clear: [],
   }
 
   on(event: keyof KeyListeners, handler: KeyHandler) {
@@ -117,9 +122,11 @@ export class LaunchKey {
     this.send(12, 127)
   }
 
-  send(note: INoteParam, velocity: number) {
+  send(note: number, velocity: number) {
     if (!this.ctrlOut) return
     if (velocity < 0 || velocity > 127) return
+
+    if (note >= 95) this.dispatch('update', note, velocity)
 
     this.ctrlOut.playNote(note, 16, {
       velocity,
@@ -135,5 +142,7 @@ export class LaunchKey {
     for (let note = 96; note <= 120; note++) {
       this.send(note, BRIGHT_WHITE)
     }
+
+    this.dispatch('clear', 0, 0)
   }
 }
