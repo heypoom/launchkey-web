@@ -55,18 +55,20 @@ import {DrawingBoard} from './DrawingBoard'
 import {LaunchKey} from './LaunchKey'
 import {colorMapping} from './colors'
 
+import {positionOf, noteOf} from './utils'
+
 let board: DrawingBoard
+
+let INITIAL_BOARD = Array(18).fill('white')
 
 export default Vue.extend({
   data: () => ({
-    colors: Array(18).fill('white'),
+    colors: INITIAL_BOARD,
   }),
 
   methods: {
-    tap(i) {
-      let note = i + 95
-      if (i > 9) note += 7
-      console.log(this.app.update(note))
+    tap(position) {
+      this.board.update(noteOf(position))
     },
   },
 
@@ -75,16 +77,13 @@ export default Vue.extend({
     this.board = board
 
     board.on('clear', () => {
-      this.colors = Array(18).fill('white')
+      this.colors = INITIAL_BOARD
     })
 
     board.on('update', (note, color) => {
-      let position = note - 95
-      if (position >= 17) position -= 7
+      let position = positionOf(note)
 
       Vue.set(this.colors, position, colorMapping[color])
-
-      console.log([...this.colors])
     })
   },
 })
