@@ -1,26 +1,18 @@
 import {LaunchKey} from './LaunchKey'
 
-import {
-  LIGHT_BLUE,
-  PINK,
-  TEAL,
-  BRIGHT_WHITE,
-  RED,
-  GREEN,
-  LIGHT_TEAL,
-} from './colors'
+import {LIGHT_BLUE, PINK, TEAL, WHITE, RED, GREEN, LIGHT_TEAL} from './colors'
 import {positionOf} from './utils'
 
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
 
 export class WhackAMole extends LaunchKey {
-  colors = [BRIGHT_WHITE, PINK, TEAL, LIGHT_BLUE]
+  colors = [WHITE, PINK, TEAL, LIGHT_BLUE]
 
   state = Array(17).fill(false)
   decayState = Array(17).fill(0)
 
   config = {
-    decayTime: () => Math.floor(Math.random() * 20) + 10,
+    decayTime: () => Math.floor(Math.random() * 30) + 10,
     moleChance: 0.01,
     gameTick: 200,
   }
@@ -62,13 +54,13 @@ export class WhackAMole extends LaunchKey {
     this.addMole(position)
   }
 
-  resetBlock(position: number, color: number = BRIGHT_WHITE) {
+  resetBlock(position: number, color: number = WHITE) {
     this.decayState[position] = 0
     this.state[position] = false
     this.light(position, color)
 
-    if (color !== BRIGHT_WHITE) {
-      setTimeout(() => this.light(position, BRIGHT_WHITE), 150)
+    if (color !== WHITE) {
+      setTimeout(() => this.light(position, WHITE), 150)
     }
   }
 

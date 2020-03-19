@@ -1,10 +1,10 @@
 import {LaunchKey} from './LaunchKey'
 
-import {LIGHT_BLUE, PINK, TEAL, BRIGHT_WHITE} from './colors'
+import {LIGHT_BLUE, PINK, TEAL, WHITE} from './colors'
 
 export class DrawingBoard extends LaunchKey {
   data: {[key: string]: number} = {}
-  colors = [BRIGHT_WHITE, PINK, TEAL, LIGHT_BLUE]
+  colors = [WHITE, PINK, TEAL, LIGHT_BLUE]
 
   constructor() {
     super()

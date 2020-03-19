@@ -1,6 +1,6 @@
 import WebMidi, {Input, Output, INoteParam} from 'webmidi'
 
-import {BRIGHT_WHITE} from './colors'
+import {WHITE} from './colors'
 import {noteOf} from './utils'
 
 export const enableMidi = () =>
@@ -148,7 +148,7 @@ export class LaunchKey {
 
   clearLights() {
     for (let note = 96; note <= 120; note++) {
-      this.send(note, BRIGHT_WHITE)
+      this.send(note, WHITE)
     }
 
     this.dispatch('clear')
