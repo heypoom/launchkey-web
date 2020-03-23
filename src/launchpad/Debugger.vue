@@ -2,7 +2,7 @@
   div.backdrop
     div.container
       h1
-        div Frame {{frameID}} | Frames: {{frames.length}}
+        div Frame {{frameID + 1}} | Frames: {{frames.length}}
       .toolbar
         button(@click="prevFrame") ⏪
         button.play(@click="play") ⏯
@@ -166,6 +166,13 @@ const frameAnimator = Vue.extend({
       this.rerender()
     },
 
+    deleteFrame() {
+      this.frames = this.frames.slice(0, this.frames.length - 1)
+      this.frameID = this.frames.length
+
+      this.rerender()
+    },
+
     reset() {
       this.frames = []
       this.frameID = 0
@@ -174,12 +181,16 @@ const frameAnimator = Vue.extend({
       this.rerender()
     },
 
+    createFrame() {
+      this.frames = [...this.frames, {...this.state}]
+      this.frameID = this.frames.length - 1
+    },
+
     nextFrame() {
       this.frameID++
 
       if (!this.frames[this.frameID]) {
-        this.frames = [...this.frames, {...this.state}]
-        this.frameID = this.frames.length - 1
+        this.createFrame()
 
         return
       }
@@ -241,14 +252,14 @@ const frameAnimator = Vue.extend({
       this.state = {}
       this.colors = {}
 
-      this.useBlankFrame()
+      this.fill()
     },
 
-    useBlankFrame() {
+    fill(color: number = 0, webColor: string = '#ffffff', replace = false) {
       for (let row of pad.midiGrid) {
         for (let note of row) {
-          this.state[note] = 0
-          this.colors[note] = '#ffffff'
+          this.state[note] = color
+          this.colors[note] = webColor
         }
       }
     },
@@ -264,20 +275,21 @@ const frameAnimator = Vue.extend({
 
       if (this.frames.length < 2) return
 
-      this.clear()
+      let startAt = this.frameID
 
       const animate = async () => {
-        this.clear()
+        // this.clear()
 
-        for (let fid in this.frames) {
+        for (let frameID = startAt; frameID < this.frames.length; frameID++) {
           if (!this.isPlaying) return
 
-          this.frameID = fid
+          this.frameID = frameID
           this.rerender()
 
           await delay(100)
         }
 
+        startAt = 0
         requestAnimationFrame(animate)
       }
 
@@ -306,36 +318,43 @@ const frameAnimator = Vue.extend({
 
       pad.rgb(PREV_FRAME_BTN, 0, 255, 247)
       pad.rgb(NEXT_FRAME_BTN, 0, 255, 247)
-      pad.rgb(PLAY_BTN, 161, 252, 3)
+      pad.rgb(PLAY_BTN, 140, 3, 252)
       pad.rgb(RESET_BTN, 252, 123, 3)
       pad.rgb(CLEAR_BTN, 252, 123, 3)
 
       pad.on('controlChange', (id, v) => {
         if (id === RESET_BTN) {
           if (v === 0) return pad.rgb(RESET_BTN, 252, 123, 3)
+          pad.rgb(id, 255, 0, 157)
         }
 
         if (id === CLEAR_BTN) {
           if (v === 0) return pad.rgb(CLEAR_BTN, 252, 123, 3)
+          pad.rgb(id, 255, 0, 157)
           this.clear()
         }
 
         if (id === PREV_FRAME_BTN) {
           if (v === 0) return pad.rgb(PREV_FRAME_BTN, 0, 255, 247)
+          pad.rgb(id, 255, 0, 157)
           this.prevFrame()
         }
 
         if (id === NEXT_FRAME_BTN) {
           if (v === 0) return pad.rgb(NEXT_FRAME_BTN, 0, 255, 247)
+          pad.rgb(id, 255, 0, 157)
           this.nextFrame()
         }
 
         if (id === PLAY_BTN) {
-          if (v === 0) return pad.rgb(PLAY_BTN, 161, 252, 3)
+          if (v === 0) return
+          if (this.frames.length < 2) return
+
+          if (this.isPlaying) pad.rgb(id, 127, 0, 0)
+          else pad.rgb(id, 0, 127, 0)
+
           this.play()
         }
-
-        pad.rgb(id, 255, 0, 157)
       })
     },
   },
