@@ -1,6 +1,6 @@
 import {LaunchKey} from './LaunchKey'
 
-import {LIGHT_BLUE, PINK, TEAL, WHITE} from './colors'
+import {LIGHT_BLUE, PINK, TEAL, WHITE} from '../colors'
 
 export class DrawingBoard extends LaunchKey {
   data: {[key: string]: number} = {}
@@ -19,7 +19,7 @@ export class DrawingBoard extends LaunchKey {
   }
 
   reset() {
-    this.clearLights()
+    this.clear()
     this.data = {}
   }
 

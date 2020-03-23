@@ -5,7 +5,7 @@
         .pad(v-for="i in 18", :style="{background: colors[i]}", @click="tap(i)") {{i}}
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 $button-size: 150px;
 $gap-size: 20px;
 
@@ -52,9 +52,10 @@ $gap-size: 20px;
 import Vue from 'vue'
 
 import {DrawingBoard} from './DrawingBoard'
-import {colorMapping} from './colors'
 
 import {positionOf, noteOf} from './utils'
+
+import {colorMapping} from '../colors'
 
 let INITIAL_BOARD = Array(18).fill('white')
 

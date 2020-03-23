@@ -1,9 +1,9 @@
 import {LaunchKey} from './LaunchKey'
 
-import {LIGHT_BLUE, PINK, TEAL, WHITE, RED, GREEN, LIGHT_TEAL} from './colors'
+import {LIGHT_BLUE, PINK, TEAL, WHITE, RED, GREEN, LIGHT_TEAL} from '../colors'
 import {positionOf} from './utils'
 
-import {oofAudio, squeakAudio} from './audio'
+import {oofAudio, squeakAudio} from '../audio'
 
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
 
@@ -36,7 +36,7 @@ export class WhackAMole extends LaunchKey {
 
     this.on('padTouch', note => this.hit(note))
 
-    this.on('ready', () => this.clearLights())
+    this.on('ready', () => this.clear())
   }
 
   addMole(position: number) {
@@ -82,7 +82,7 @@ export class WhackAMole extends LaunchKey {
   }
 
   async startGame() {
-    this.clearLights()
+    this.clear()
     this.setPlaying(true)
     this.onScoreUpdate(0)
 
@@ -106,7 +106,7 @@ export class WhackAMole extends LaunchKey {
 
   endGame() {
     this.setPlaying(false)
-    this.clearLights()
+    this.clear()
   }
 
   fail() {

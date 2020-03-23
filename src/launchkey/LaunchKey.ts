@@ -1,6 +1,6 @@
 import WebMidi, {Input, Output, INoteParam} from 'webmidi'
 
-import {WHITE} from './colors'
+import {WHITE} from '../colors'
 import {noteOf} from './utils'
 
 export const enableMidi = () =>
@@ -24,6 +24,16 @@ type KeyEvents =
   | 'ready'
 
 type KeyListeners = Record<KeyEvents, KeyHandler[]>
+
+function inputOf(name) {
+  const inPort = WebMidi.getInputByName(name)
+  if (inPort) return inPort
+}
+
+function outputOf(name) {
+  const outPort = WebMidi.getOutputByName(name)
+  if (outPort) return outPort
+}
 
 export class LaunchKey {
   midiIn: Input
@@ -59,7 +69,7 @@ export class LaunchKey {
   dispatch(event: keyof KeyListeners, note: number = 0, velocity: number = 0) {
     if (!this.listeners[event]) return
 
-    console.debug(`event ${event}>`, note, velocity)
+    console.debug(`${event}>`, note, velocity)
 
     for (let listener of this.listeners[event]) {
       listener(note, velocity)
@@ -110,18 +120,9 @@ export class LaunchKey {
   }
 
   initPorts() {
-    let midiIn = WebMidi.getInputByName(this.midiPort)
-    if (!midiIn) return
-
-    let ctrlIn = WebMidi.getInputByName(this.inControlPort)
-    if (!ctrlIn) return
-
-    let ctrlOut = WebMidi.getOutputByName(this.inControlPort)
-    if (!ctrlOut) return
-
-    this.midiIn = midiIn
-    this.ctrlIn = ctrlIn
-    this.ctrlOut = ctrlOut
+    this.midiIn = inputOf(this.midiPort)
+    this.ctrlIn = inputOf(this.inControlPort)
+    this.ctrlOut = outputOf(this.inControlPort)
   }
 
   enableExtendedMode() {
@@ -146,7 +147,7 @@ export class LaunchKey {
     this.send(note, color)
   }
 
-  clearLights() {
+  clear() {
     for (let note = 96; note <= 120; note++) {
       this.send(note, WHITE)
     }

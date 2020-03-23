@@ -1,6 +1,6 @@
 import {LaunchKey} from './LaunchKey'
 
-import {LIGHT_BLUE, PINK, TEAL, WHITE} from './colors'
+import {LIGHT_BLUE, PINK, TEAL, WHITE} from '../colors'
 
 export async function SimplePad() {
   const board = new LaunchKey()
@@ -11,5 +11,5 @@ export async function SimplePad() {
   board.on('padTouch', note => board.send(note, LIGHT_BLUE))
   board.on('padRelease', note => board.send(note, WHITE))
 
-  board.clearLights()
+  board.clear()
 }
