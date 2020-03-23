@@ -126,7 +126,7 @@ const frameAnimator = Vue.extend({
       [255, 0, 157],
     ],
 
-    webPalette: ['white', '#01dcfc', '#ff7ef8'],
+    webPalette: ['#ffffff', '#01dcfc', '#ff7ef8'],
   }),
 
   mounted() {
@@ -151,8 +151,6 @@ const frameAnimator = Vue.extend({
     },
 
     updateDisplay: function(note: number, color: number) {
-      if (!color) return
-
       const pos = pad.midiToGridMap[note]
       if (typeof pos !== 'number') return
 
@@ -198,13 +196,13 @@ const frameAnimator = Vue.extend({
       this.rerender()
     },
 
-    renderOnScreen(frame: number[]) {
+    clearScreen() {
       for (let row of pad.midiGrid) {
-        for (let note of row) {
-          this.colors[note] = '#ffffff'
-        }
+        for (let note of row) this.updateDisplay(note, 0)
       }
+    },
 
+    renderOnScreen(frame: number[]) {
       for (let note in frame) {
         let color = this.state[note]
 
@@ -235,6 +233,7 @@ const frameAnimator = Vue.extend({
 
       this.state = frame
 
+      this.clearScreen()
       this.renderOnScreen(frame)
       this.renderOnDevice(frame)
     },
@@ -255,11 +254,13 @@ const frameAnimator = Vue.extend({
       this.fill()
     },
 
-    fill(color: number = 0, webColor: string = '#ffffff', replace = false) {
+    fill(color: number = 0, replace = false) {
       for (let row of pad.midiGrid) {
         for (let note of row) {
+          if (replace && this.state[note]) return
+
           this.state[note] = color
-          this.colors[note] = webColor
+          this.updateDisplay(note, color)
         }
       }
     },
@@ -267,7 +268,6 @@ const frameAnimator = Vue.extend({
     play(frame: number) {
       if (this.isPlaying) {
         this.isPlaying = false
-
         return
       }
 
@@ -278,8 +278,6 @@ const frameAnimator = Vue.extend({
       let startAt = this.frameID
 
       const animate = async () => {
-        // this.clear()
-
         for (let frameID = startAt; frameID < this.frames.length; frameID++) {
           if (!this.isPlaying) return
 
