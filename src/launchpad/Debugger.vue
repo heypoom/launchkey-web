@@ -94,8 +94,6 @@ function posOf(n: number) {
   return [x, y]
 }
 
-window.posOf = posOf
-
 function animateSlideUp(frame) {
   const frames = []
 
@@ -132,15 +130,6 @@ const frameAnimator = Vue.extend({
   }),
 
   mounted() {
-    window.loadFrames = (frames: string) => {
-      this.frames = JSON.parse(frames)
-      window.frames = this.frames
-
-      this.frameID = this.frames.length - 1
-
-      this.rerender()
-    }
-
     pad.on('ready', () => {
       window.pad = pad
       window.animator = this
@@ -154,6 +143,13 @@ const frameAnimator = Vue.extend({
   },
 
   methods: {
+    loadFrames(frames: string) {
+      this.frames = JSON.parse(frames)
+      this.frameID = this.frames.length - 1
+
+      this.rerender()
+    },
+
     updateDisplay: function(note: number, color: number) {
       if (!color) return
 
@@ -184,7 +180,6 @@ const frameAnimator = Vue.extend({
       if (!this.frames[this.frameID]) {
         this.frames = [...this.frames, {...this.state}]
         this.frameID = this.frames.length - 1
-        window.frames = this.frames
 
         return
       }
@@ -228,7 +223,6 @@ const frameAnimator = Vue.extend({
       if (!frame) return
 
       this.state = frame
-      window.frame = frame
 
       this.renderOnScreen(frame)
       this.renderOnDevice(frame)
@@ -257,8 +251,6 @@ const frameAnimator = Vue.extend({
           this.colors[note] = '#ffffff'
         }
       }
-
-      window.frame = this.state
     },
 
     play(frame: number) {
@@ -286,7 +278,7 @@ const frameAnimator = Vue.extend({
           await delay(100)
         }
 
-        window.requestAnimationFrame(animate)
+        requestAnimationFrame(animate)
       }
 
       animate()
@@ -303,9 +295,6 @@ const frameAnimator = Vue.extend({
 
       this.state = state
       this.updateDisplay(note, color)
-
-      window.frame = state
-      window.webPalette = this.webPalette
     },
 
     setupButtons() {
