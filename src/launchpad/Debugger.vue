@@ -143,56 +143,13 @@ const frameAnimator = Vue.extend({
 
     pad.on('ready', () => {
       window.pad = pad
+      window.animator = this
 
       this.clear()
 
       pad.on('padTouch', (n, v) => this.updateBlock(n, v))
 
-      let PREV_FRAME_BTN = 93
-      let NEXT_FRAME_BTN = 94
-      let PLAY_BTN = 98
-      let RESET_BTN = 39
-      let CLEAR_BTN = 49
-
-      pad.rgb(PREV_FRAME_BTN, 0, 255, 247)
-      pad.rgb(NEXT_FRAME_BTN, 0, 255, 247)
-      pad.rgb(PLAY_BTN, 161, 252, 3)
-      pad.rgb(RESET_BTN, 252, 123, 3)
-      pad.rgb(CLEAR_BTN, 252, 123, 3)
-
-      pad.on('controlChange', (id, v) => {
-        if (id === RESET_BTN) {
-          if (v === 0) return pad.rgb(RESET_BTN, 252, 123, 3)
-          pad.rgb(RESET_BTN, 255, 0, 157)
-
-          this.reset()
-        }
-
-        if (id === CLEAR_BTN) {
-          if (v === 0) return pad.rgb(CLEAR_BTN, 252, 123, 3)
-          pad.rgb(CLEAR_BTN, 255, 0, 157)
-
-          this.clear()
-        }
-
-        if (id === PREV_FRAME_BTN) {
-          if (v === 0) return pad.rgb(PREV_FRAME_BTN, 0, 255, 247)
-          pad.rgb(PREV_FRAME_BTN, 255, 0, 157)
-          this.prevFrame()
-        }
-
-        if (id === NEXT_FRAME_BTN) {
-          if (v === 0) return pad.rgb(NEXT_FRAME_BTN, 0, 255, 247)
-          pad.rgb(NEXT_FRAME_BTN, 255, 0, 157)
-          this.nextFrame()
-        }
-
-        if (id === PLAY_BTN) {
-          if (v === 0) return pad.rgb(PLAY_BTN, 161, 252, 3)
-          pad.rgb(PLAY_BTN, 255, 0, 157)
-          this.play()
-        }
-      })
+      this.setupButtons()
     })
   },
 
@@ -236,6 +193,12 @@ const frameAnimator = Vue.extend({
     },
 
     renderOnScreen(frame: number[]) {
+      for (let row of pad.midiGrid) {
+        for (let note of row) {
+          this.colors[note] = '#ffffff'
+        }
+      }
+
       for (let note in frame) {
         let color = this.state[note]
 
@@ -344,11 +307,52 @@ const frameAnimator = Vue.extend({
       window.frame = state
       window.webPalette = this.webPalette
     },
+
+    setupButtons() {
+      let PREV_FRAME_BTN = 93
+      let NEXT_FRAME_BTN = 94
+      let PLAY_BTN = 98
+      let RESET_BTN = 39
+      let CLEAR_BTN = 49
+
+      pad.rgb(PREV_FRAME_BTN, 0, 255, 247)
+      pad.rgb(NEXT_FRAME_BTN, 0, 255, 247)
+      pad.rgb(PLAY_BTN, 161, 252, 3)
+      pad.rgb(RESET_BTN, 252, 123, 3)
+      pad.rgb(CLEAR_BTN, 252, 123, 3)
+
+      pad.on('controlChange', (id, v) => {
+        if (id === RESET_BTN) {
+          if (v === 0) return pad.rgb(RESET_BTN, 252, 123, 3)
+        }
+
+        if (id === CLEAR_BTN) {
+          if (v === 0) return pad.rgb(CLEAR_BTN, 252, 123, 3)
+          this.clear()
+        }
+
+        if (id === PREV_FRAME_BTN) {
+          if (v === 0) return pad.rgb(PREV_FRAME_BTN, 0, 255, 247)
+          this.prevFrame()
+        }
+
+        if (id === NEXT_FRAME_BTN) {
+          if (v === 0) return pad.rgb(NEXT_FRAME_BTN, 0, 255, 247)
+          this.nextFrame()
+        }
+
+        if (id === PLAY_BTN) {
+          if (v === 0) return pad.rgb(PLAY_BTN, 161, 252, 3)
+          this.play()
+        }
+
+        pad.rgb(id, 255, 0, 157)
+      })
+    },
   },
 })
 
 window.RGB = RGB
-window.frameAnimator = frameAnimator
 
 export default frameAnimator
 </script>
