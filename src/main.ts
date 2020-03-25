@@ -7,7 +7,7 @@ import Dashboard from './Dashboard.vue'
 import LKDrawingBoard from './launchkey/DrawingBoard.vue'
 import LKWhackAMole from './launchkey/WhackAMole.vue'
 
-import LPDebugger from './launchpad/Debugger.vue'
+import LPAnimator from './launchpad/Animator.vue'
 
 Vue.use(VueRouter)
 
@@ -15,7 +15,7 @@ const routes = [
   {path: '/', component: Dashboard},
   {path: '/launchkey/drawing', component: LKDrawingBoard},
   {path: '/launchkey/mole', component: LKWhackAMole},
-  {path: '/launchpad/debug', component: LPDebugger},
+  {path: '/launchpad/animator', component: LPAnimator},
 ]
 
 const router = new VueRouter({routes})

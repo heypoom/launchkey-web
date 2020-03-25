@@ -1,23 +1,28 @@
 <template lang="pug">
   div.backdrop
     div.container
-      h1
+      h1.heading
         div Frame {{frameID + 1}} | Frames: {{frames.length}}
-      .toolbar
-        button(@click="prevFrame") ⏪
-        button.play(@click="play") ⏯
-        button(@click="nextFrame") ⏩
-      .pads-container
-        .pad(v-for="i in 64", :style="{background: colors[i]}", @click="tap(i)") {{i}}
+      .board-wrapper
+        .toolbar
+          button(@click="prevFrame") ⏪
+          button.play(@click="play") ⏯
+          button(@click="nextFrame") ⏩
+        .pads-container
+          .pad(v-for="i in 64", :style="{background: colors[i]}", @click="tap(i)") {{i}}
 </template>
 <style lang="scss" scoped>
-$button-size: 100px;
+$button-size: 80px;
 $gap-size: 20px;
 $grid-size: 8;
-$font-size: 2.3em;
+$font-size: 1.8em;
 
 .backdrop {
   color: white;
+}
+
+.heading {
+  margin-bottom: 1.5em;
 }
 
 .container {
@@ -27,17 +32,31 @@ $font-size: 2.3em;
   justify-content: center;
   min-height: 100vh;
   background: #2d2d30;
+  padding: 100px 0;
+}
+
+.board-wrapper,
+.toolbar {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.toolbar {
+  flex-direction: column;
+  margin-right: 1.8em;
 }
 
 .toolbar button {
   cursor: pointer;
-  padding: 10px 50px;
   font-size: 2.5em;
   background: transparent;
   color: #01dcfc;
   font-weight: 600;
   border: none;
-  margin: 30px 50px;
+
+  margin-bottom: 1.5em;
 }
 
 .pads-container {
@@ -140,6 +159,13 @@ const frameAnimator = Vue.extend({
 
       this.setupButtons()
     })
+  },
+
+  watch: {
+    frames(frames, oldFrames) {
+      if (this.frames.length < 2) pad.light(98, 0)
+      else pad.rgb(98, 0, 60, 60)
+    },
   },
 
   methods: {
@@ -316,7 +342,7 @@ const frameAnimator = Vue.extend({
 
       pad.rgb(PREV_FRAME_BTN, 0, 255, 247)
       pad.rgb(NEXT_FRAME_BTN, 0, 255, 247)
-      pad.rgb(PLAY_BTN, 140, 3, 252)
+      pad.light(PLAY_BTN, 0)
       pad.rgb(RESET_BTN, 252, 123, 3)
       pad.rgb(CLEAR_BTN, 252, 123, 3)
 
