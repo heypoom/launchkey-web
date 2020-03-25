@@ -339,35 +339,43 @@ const frameAnimator = Vue.extend({
       let PLAY_BTN = 98
       let RESET_BTN = 39
       let CLEAR_BTN = 49
+      let DELETE_FRAME_BTN = 59
 
       pad.rgb(PREV_FRAME_BTN, 0, 255, 247)
       pad.rgb(NEXT_FRAME_BTN, 0, 255, 247)
       pad.light(PLAY_BTN, 0)
       pad.rgb(RESET_BTN, 252, 123, 3)
       pad.rgb(CLEAR_BTN, 252, 123, 3)
+      pad.rgb(DELETE_FRAME_BTN, 255, 0, 0)
 
       pad.on('controlChange', (id, v) => {
         if (id === RESET_BTN) {
-          if (v === 0) return pad.rgb(RESET_BTN, 252, 123, 3)
+          if (v === 0) return pad.rgb(id, 252, 123, 3)
           pad.rgb(id, 255, 0, 157)
         }
 
         if (id === CLEAR_BTN) {
-          if (v === 0) return pad.rgb(CLEAR_BTN, 252, 123, 3)
+          if (v === 0) return pad.rgb(id, 252, 123, 3)
           pad.rgb(id, 255, 0, 157)
           this.clear()
         }
 
         if (id === PREV_FRAME_BTN) {
-          if (v === 0) return pad.rgb(PREV_FRAME_BTN, 0, 255, 247)
+          if (v === 0) return pad.rgb(id, 0, 255, 247)
           pad.rgb(id, 255, 0, 157)
           this.prevFrame()
         }
 
         if (id === NEXT_FRAME_BTN) {
-          if (v === 0) return pad.rgb(NEXT_FRAME_BTN, 0, 255, 247)
+          if (v === 0) return pad.rgb(id, 0, 255, 247)
           pad.rgb(id, 255, 0, 157)
           this.nextFrame()
+        }
+
+        if (id === DELETE_FRAME_BTN) {
+          if (v === 0) return pad.rgb(id, 255, 0, 0)
+          pad.rgb(id, 255, 0, 157)
+          this.deleteFrame()
         }
 
         if (id === PLAY_BTN) {
